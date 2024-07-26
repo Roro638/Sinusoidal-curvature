@@ -1,8 +1,9 @@
 % Data points for mode 1
 x_mode1 = [4.0761, 39, 10.3027, 1.25];
 y_mode1 = [0.77318, 1.68, 0.86366, 0.59085];
+x_mode1 = [x_mode1; Z_t];
+y_mode1 = [y_mode1; persistance_length];
 
-% Data points for mode 2
 x_mode2 = [1.3061, 0.99067,11.8,1.0049, 6.78];
 y_mode2 = [0.909, 1.8194,1.5918, 1.0027, 1.7285];
 
