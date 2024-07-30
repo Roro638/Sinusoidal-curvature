@@ -1,16 +1,16 @@
-filePath = '/home/s2239369/Internship/FEA results/61/variables.dat';
+filePath = "C:\Users\rober\Downloads\variables60.dat";
 
 % Read data from file
 dataTable = readtable(filePath, 'Delimiter', '\t');
-disp(dataTable);
+%disp(dataTable);
 
 % Constants
 W = 1; % mm
-t = 0.023; % mm
+t = 0.01; % mm
 Z = [];
 num_nodes_row = 351; %351
 num_nodes_width = 41; %41
-mesh_size = 0.02439;
+mesh_size = 0.02439; %0.02439
 
 row1_start = 881;
 row1_end = 1056;
@@ -38,7 +38,7 @@ for i = 1:length(displacement_y)
     group_index = floor((i-1) / num_nodes_row);
     
     % Set the x_initial value for each group of 176 nodes
-    x_initial(i) = group_index * mesh_size - 0.4545;
+    x_initial(i) = group_index * mesh_size - 0.02439;
 end
 
 % Create z positions for all nodes
@@ -75,6 +75,7 @@ end
 Z_0 = Z(1);
 Z_t = Z_0 / t;
 Frequency = [];
+Amplitude = [];
 
 % Loop to find persistence length
 for i = 1:(num_nodes_row)
@@ -146,29 +147,18 @@ for col = 1:num_nodes_row
 
     
     Frequency = [Frequency, (fittedParams(2))];
+    Amplitude = [Amplitude, (fittedParams(1))];
 
     % Display fitted parameters for the current column
     
-    disp(['Fitted Parameters for Column ', num2str(col), ':']);
-    disp(['Amplitude (A): ', num2str(fittedParams(1))]);
-    disp(['Frequency (B): ', num2str(fittedParams(2))]);
-    disp(['Phase (C): ', num2str(fittedParams(3))]);
-    disp(['Offset (D): ', num2str(fittedParams(4))]);
+    %disp(['Fitted Parameters for Column ', num2str(col), ':']);
+    %disp(['Amplitude (A): ', num2str(fittedParams(1))]);
+    %disp(['Frequency (B): ', num2str(fittedParams(2))]);
+    %disp(['Phase (C): ', num2str(fittedParams(3))]);
+    %disp(['Offset (D): ', num2str(fittedParams(4))]);
 end
 
 % Results plots
-
-figure;
-plot(z(1:num_nodes_row), Z);
-title('Z(2*Amplitude) vs z');
-xlabel('z');
-ylabel('Z(2*Amplitude)');
-
-figure;
-plot(z(1:num_nodes_row), abs(Frequency));
-title('Frequency vs z');
-xlabel('z');
-ylabel('Frequency');
 
 figure;
 scatter(Z_t, persistance_length);
@@ -176,16 +166,16 @@ title('Lp/W vs Z/t');
 xlabel('Z/t');
 ylabel('Lp/W');
 
-set_1234 = floor(persistance_length / mesh_size);
+Lp_index = floor(persistance_length / mesh_size);
 
 figure;
-scatter(all_x_final(:,set_1234), all_displacement_y(:,set_1234));
+scatter(all_x_final(:,Lp_index), all_displacement_y(:,Lp_index));
 title('Curvature at boundary');
 xlabel('x');
 ylabel('y');
 
 figure;
-scatter(all_x_final(:,30), all_displacement_y(:,1));
+scatter(all_x_final(:,1), all_displacement_y(:,1));
 title('Curvature at boundary');
 xlabel('x');
 ylabel('y');
@@ -198,8 +188,11 @@ ylabel('y');
 zlabel('z');
 
 figure;
-scatter(z_final(1: num_nodes_row), abs(Frequency(1:num_nodes_row)));
+scatter(z_final(1: Lp_index), abs(Frequency(1: Lp_index)));
 title('Frequency vs z');
+
+figure;
+scatter(z_final(1: Lp_index), abs(Amplitude(1:Lp_index)));
 
 % Display results
 disp('Persistence Length (Simulation):');
