@@ -1,4 +1,4 @@
-filePath = "C:\Users\rober\Downloads\variables60.dat";
+filePath = "/home/s2239369/Internship/FEA results/60/variables60.dat";
 
 % Read data from file
 dataTable = readtable(filePath, 'Delimiter', '\t');
@@ -6,11 +6,11 @@ dataTable = readtable(filePath, 'Delimiter', '\t');
 
 % Constants
 W = 1; % mm
-t = 0.01; % mm
+t = 0.023; % mm
 Z = [];
-num_nodes_row = 351; %351
-num_nodes_width = 41; %41
-mesh_size = 0.02439; %0.02439
+num_nodes_row = 351; %351  %151
+num_nodes_width = 41; %41  %51
+mesh_size = 0.02439; %0.02439 %0.019608
 
 row1_start = 881;
 row1_end = 1056;
@@ -93,7 +93,7 @@ for i = 1:(num_nodes_row)
     [fittedParams, resnorm] = lsqcurvefit(linearModel, initialGuess, x_data, y_data, [], [], options);
 
     % Debugging output
-    fprintf('resnorm = %f\n', resnorm);
+    %fprintf('resnorm = %f\n', resnorm);
     
     if resnorm < tolerance
         persistance_length = z_final(i);
@@ -112,7 +112,7 @@ for i = 1:(num_nodes_row)
 end
 
 % Initialize a matrix to store the fitted parameters for each column
-fittedParamsMatrix = zeros(176, 4);
+fittedParamsMatrix = zeros(num_nodes_row, 4);
 
 % Fit sine curve to our data points across all x
 for col = 1:num_nodes_row
